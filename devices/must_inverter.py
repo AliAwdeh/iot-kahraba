@@ -316,6 +316,12 @@ class MustInverterReader:
 
         battery_voltage = data.get("battery_voltage")
 
+        if battery_voltage is None:
+            inverter_data = data.get("inverter_data")
+
+            if isinstance(inverter_data, dict):
+                battery_voltage = inverter_data.get("inverter_battery_voltage")
+
         if (
             is_main_inverter
             and battery_voltage is not None
@@ -590,6 +596,11 @@ class MustInverterReader:
 
         if inverter_data:
             payload.update({
+                "battery_voltage": (
+                    payload["battery_voltage"]
+                    if payload["battery_voltage"] is not None
+                    else inverter_data["inverter_battery_voltage"]
+                ),
                 "inverter_voltage": inverter_data["inverter_voltage"],
                 "grid_voltage": inverter_data["grid_voltage"],
                 "bus_voltage": inverter_data["bus_voltage"],
