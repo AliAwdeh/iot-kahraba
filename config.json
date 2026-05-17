@@ -42,7 +42,8 @@
     "enabled": true,
     "interval_seconds": 10,
     "block_delay_seconds": 0.2,
-    "low_battery_voltage": 48.0,
+    "low_battery_voltage": 45.0,
+    "overcharge_battery_voltage": 58.0,
     "pv_high_temperature": 70,
     "inverter_high_temperature": 80,
     "items": [

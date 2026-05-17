@@ -82,7 +82,10 @@ class MustInverterReader:
         self.interval = int(config.get("interval_seconds", 10))
         self.block_delay = float(config.get("block_delay_seconds", 0.2))
 
-        self.low_battery_voltage = float(config.get("low_battery_voltage", 48.0))
+        self.low_battery_voltage = float(config.get("low_battery_voltage", 45.0))
+        self.overcharge_battery_voltage = float(
+            config.get("overcharge_battery_voltage", 58.0)
+        )
         self.pv_high_temperature = float(config.get("pv_high_temperature", 70))
         self.inverter_high_temperature = float(config.get("inverter_high_temperature", 80))
 
@@ -281,13 +284,13 @@ class MustInverterReader:
         """
         Project-level status logic.
 
-        LOW_BATTERY is only checked from the main inverter:
+        Battery voltage statuses are only checked from the main inverter:
             must_1 / role=main / USB0
 
         The water inverter:
             must_2 / role=water / USB1
 
-        should not trigger LOW_BATTERY for the whole system.
+        should not trigger battery voltage statuses for the whole system.
         """
 
         role = data.get("role")
@@ -312,6 +315,13 @@ class MustInverterReader:
             return "PV_WARNING"
 
         battery_voltage = data.get("battery_voltage")
+
+        if (
+            is_main_inverter
+            and battery_voltage is not None
+            and battery_voltage > self.overcharge_battery_voltage
+        ):
+            return "OVER_CHARGING"
 
         if (
             is_main_inverter
