@@ -1,0 +1,4 @@
+adafruit-circuitpython-dht
+minimalmodbus
+pyserial
+paho-mqtt

@@ -1,0 +1,67 @@
+{
+  "site_id": "site1",
+
+  "mqtt": {
+    "broker": "192.168.0.223",
+    "port": 1883,
+    "username": null,
+    "password": null
+  },
+
+  "refresh_seconds": 1,
+
+  "dht11": {
+    "enabled": true,
+    "device_id": "dht11_1",
+    "gpio": "D4",
+    "interval_seconds": 5
+  },
+
+  "relays": {
+    "enabled": true,
+    "mode": "pico_serial",
+    "port": "/dev/ttyACM0",
+    "baudrate": 115200,
+    "items": [
+      {
+        "id": "relay_1",
+        "number": 1
+      },
+      {
+        "id": "relay_2",
+        "number": 2
+      },
+      {
+        "id": "relay_3",
+        "number": 3
+      }
+    ]
+  },
+
+  "inverters": {
+    "enabled": true,
+    "interval_seconds": 10,
+    "block_delay_seconds": 0.2,
+    "low_battery_voltage": 48.0,
+    "pv_high_temperature": 70,
+    "inverter_high_temperature": 80,
+    "items": [
+      {
+        "id": "must_1",
+        "name": "main_solar_inverter",
+        "role": "main",
+        "port": "/dev/ttyUSB0",
+        "slave_address": 4,
+        "baudrate": 19200
+      },
+      {
+        "id": "must_2",
+        "name": "water_inverter",
+        "role": "water",
+        "port": "/dev/ttyUSB1",
+        "slave_address": 4,
+        "baudrate": 19200
+      }
+    ]
+  }
+}
