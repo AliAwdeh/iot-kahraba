@@ -10,6 +10,10 @@
 
   "refresh_seconds": 1,
 
+  "logging": {
+    "mqtt_publish_logs": false
+  },
+
   "dht11": {
     "enabled": true,
     "device_id": "dht11_1",
@@ -42,6 +46,7 @@
     "enabled": true,
     "interval_seconds": 10,
     "block_delay_seconds": 0.2,
+    "print_summary": true,
     "low_battery_voltage": 45.0,
     "overcharge_battery_voltage": 58.0,
     "pv_high_temperature": 70,

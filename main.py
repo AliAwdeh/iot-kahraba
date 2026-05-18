@@ -8,6 +8,7 @@ from core.threading_utils import start_thread
 
 from mqtt.client import create_mqtt_client
 from mqtt.handlers import MqttHandlers
+from mqtt.publisher import configure_logging
 
 from devices.relays import RelayManager
 from devices.dht11 import DHT11Reader
@@ -18,6 +19,7 @@ from system.shutdown import ShutdownManager
 
 def main():
     config = load_config("config.json")
+    configure_logging(config.get("logging", {}))
 
     site_id = config["site_id"]
 

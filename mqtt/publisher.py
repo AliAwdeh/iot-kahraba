@@ -3,6 +3,14 @@ import json
 from core.time_utils import now_iso
 
 
+LOG_PUBLISHES = False
+
+
+def configure_logging(config):
+    global LOG_PUBLISHES
+    LOG_PUBLISHES = bool(config.get("mqtt_publish_logs", False))
+
+
 def safe_json(data):
     return json.dumps(data, ensure_ascii=False)
 
@@ -10,7 +18,9 @@ def safe_json(data):
 def publish(client, topic, payload, qos=1, retain=False):
     payload["published_at"] = now_iso()
     client.publish(topic, safe_json(payload), qos=qos, retain=retain)
-    print(f"[MQTT PUB] {topic} -> {payload}")
+
+    if LOG_PUBLISHES:
+        print(f"[MQTT PUB] {topic}")
 
 
 def publish_error(client, site_id, source, error, extra=None):

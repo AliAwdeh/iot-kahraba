@@ -81,6 +81,7 @@ class MustInverterReader:
         self.enabled = config.get("enabled", False)
         self.interval = int(config.get("interval_seconds", 10))
         self.block_delay = float(config.get("block_delay_seconds", 0.2))
+        self.print_summary = bool(config.get("print_summary", False))
 
         self.low_battery_voltage = float(config.get("low_battery_voltage", 45.0))
         self.overcharge_battery_voltage = float(
@@ -679,14 +680,41 @@ class MustInverterReader:
             except Exception:
                 pass
 
+    def print_cycle_summary(self, payloads):
+        if not self.print_summary:
+            return
+
+        parts = []
+
+        for payload in payloads:
+            device_id = payload.get("device_id", "unknown")
+            status = payload.get("status", "unknown")
+            system_status = payload.get("system_status", "unknown")
+            battery_voltage = payload.get("battery_voltage")
+
+            if isinstance(battery_voltage, (int, float)):
+                battery_text = f"{battery_voltage:.1f}V"
+            else:
+                battery_text = "n/a"
+
+            parts.append(
+                f"{device_id} {status} battery={battery_text} system={system_status}"
+            )
+
+        if parts:
+            print("[INVERTER SUMMARY] " + " | ".join(parts))
+
     def loop(self, client):
         if not self.enabled:
             return
 
         while app_state.RUNNING:
+            cycle_payloads = []
+
             for inverter in self.inverters:
                 try:
                     payload = self.read_inverter(inverter)
+                    cycle_payloads.append(payload)
 
                     topic = f"solar/{self.site_id}/inverter/{inverter['id']}/telemetry"
 
@@ -706,6 +734,7 @@ class MustInverterReader:
                         }
                     )
 
+            self.print_cycle_summary(cycle_payloads)
             time.sleep(self.interval)
 
         self.close_all_ports()
