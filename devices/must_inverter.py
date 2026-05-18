@@ -357,8 +357,8 @@ class MustInverterReader:
 
     def use_main_data_for_non_solar_fields(self, payload):
         """
-        Auxiliary inverters keep their own PV / solar values, but main system
-        values such as battery, AC, current, and load power come from USB0.
+        Fallback for auxiliary inverters when their own data is unavailable.
+        PV / solar values stay empty; main system values come from USB0.
         """
         if self.latest_main_payload is None:
             for key in list(payload.keys()):
@@ -664,7 +664,6 @@ class MustInverterReader:
             payload["system_status"] = self.calculate_system_status(payload)
             self.latest_main_payload = payload.copy()
         else:
-            payload = self.use_main_data_for_non_solar_fields(payload)
             payload["system_status"] = self.calculate_system_status(payload)
 
         return payload
