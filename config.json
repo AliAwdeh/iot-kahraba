@@ -21,6 +21,7 @@
     "interval_seconds": 5
   },
 
+  
   "relays": {
     "enabled": true,
     "mode": "pico_serial",
